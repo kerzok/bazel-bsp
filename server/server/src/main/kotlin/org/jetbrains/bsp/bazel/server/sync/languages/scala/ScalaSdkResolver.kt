@@ -17,7 +17,9 @@ class ScalaSdkResolver(private val bazelPathsResolver: BazelPathsResolver) {
     if (maybeVersions.none()) {
       return null
     }
-    val version = maybeVersions.distinct().maxOf { it }
+    val derivedVersion = maybeVersions.distinct().maxOf { it }
+    println(derivedVersion)
+    val version = "2.12.17"
     val binaryVersion = toBinaryVersion(version)
     return ScalaSdk(
       "org.scala-lang",

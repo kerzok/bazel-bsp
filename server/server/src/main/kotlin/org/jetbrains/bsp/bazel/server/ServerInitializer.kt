@@ -44,7 +44,7 @@ object ServerInitializer {
       } else {
         CliArgs(
           bazelWorkspaceRoot = args.elementAt(0),
-          projectViewPath = args.elementAt(1),
+          projectViewPath = args.elementAt(1).replace(".personal.bazelproject", ".bazelproject"),
           produceTraceLog = args.elementAt(2).toBoolean(),
         )
       }
