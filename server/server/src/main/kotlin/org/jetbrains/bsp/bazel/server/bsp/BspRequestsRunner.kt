@@ -98,7 +98,7 @@ class BspRequestsRunner(private val serverLifetime: BazelBspServerLifetime) {
   }
 
   private fun <T> success(methodName: String, response: T): CompletableFuture<T> {
-    LOGGER.info("{} call finishing successfully", methodName)
+    LOGGER.info("{} call finishing successfully with response: {}", methodName, response)
     return CompletableFuture.completedFuture(response)
   }
 
