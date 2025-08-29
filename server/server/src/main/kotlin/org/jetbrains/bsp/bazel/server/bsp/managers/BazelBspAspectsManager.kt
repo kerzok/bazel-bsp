@@ -112,6 +112,8 @@ class BazelBspAspectsManager(
           "bazel8OrAbove" to bazel8OrAbove.toString(),
           "toolchainType" to ruleLanguage?.let { rl -> toolchains[rl]?.toString()?.let { "\"" + it + "\"" } },
         )
+      println("Bazel Aspects variables")  
+      println(variableMap)
       templateWriter.writeToFile(templateFilePath, outputFile, variableMap)
     }
 
