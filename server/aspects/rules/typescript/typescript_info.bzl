@@ -52,7 +52,7 @@ def _extract_web_test_info(target, ctx):
         for dep in ctx.rule.attr.deps:
             if hasattr(dep, "files"):
                 for file in dep.files.to_list():
-                    if file.is_source and file.short_path.startswith(package + "/"):
+                    if file.is_source and (not package or file.short_path.startswith(package + "/")):
                         source_paths.append(file.path)
                         source_file_locations.append(file_location(file))
 
