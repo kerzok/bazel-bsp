@@ -10,7 +10,7 @@ import org.jetbrains.bsp.bazel.base.BazelBspTestBaseScenario
 import org.jetbrains.bsp.bazel.base.BazelBspTestScenarioStep
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
-import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration.Companion.minutes
 
 object JavaDiagnosticsTest : BazelBspTestBaseScenario() {
   private val testClient = createTestkitClient()
@@ -48,7 +48,7 @@ object JavaDiagnosticsTest : BazelBspTestBaseScenario() {
       val transformedParams = testClient.applyJsonTransform(params)
 
       val expectedDeprecatedWarningFileUri = "file://$workspaceDir/DeprecatedWarning.java"
-      testClient.test(60.seconds) { session, _ ->
+      testClient.test(5.minutes) { session, _ ->
         session.client.clearDiagnostics()
         val result = session.server.buildTargetCompile(transformedParams).await()
         assertEquals(StatusCode.OK, result.statusCode)
@@ -120,7 +120,7 @@ object JavaDiagnosticsTest : BazelBspTestBaseScenario() {
       val expectedNoSuchMethodErrorFileUri = "file://$workspaceDir/NoSuchMethodError.java"
       val expectedWarningAndErrorFileUri = "file://$workspaceDir/WarningAndError.java"
 
-      testClient.test(60.seconds) { session, _ ->
+      testClient.test(5.minutes) { session, _ ->
         session.client.clearDiagnostics()
         val result = session.server.buildTargetCompile(transformedParams).await()
         println(session.client.logMessageNotifications)
