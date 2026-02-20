@@ -36,6 +36,7 @@ enum class Language(
     targetKinds =
       setOf(
         "jest_test",
+        "web_test",
         "ts_library",
         "ts_project",
       ),

@@ -3,6 +3,11 @@ package org.jetbrains.bsp.bazel
 import ch.epfl.scala.bsp4j.BuildTarget
 import ch.epfl.scala.bsp4j.BuildTargetCapabilities
 import ch.epfl.scala.bsp4j.BuildTargetIdentifier
+import ch.epfl.scala.bsp4j.SourceItem
+import ch.epfl.scala.bsp4j.SourceItemKind
+import ch.epfl.scala.bsp4j.SourcesItem
+import ch.epfl.scala.bsp4j.SourcesParams
+import ch.epfl.scala.bsp4j.SourcesResult
 import ch.epfl.scala.bsp4j.WorkspaceBuildTargetsResult
 import org.jetbrains.bsp.bazel.base.BazelBspTestBaseScenario
 import org.jetbrains.bsp.bazel.base.BazelBspTestScenarioStep
@@ -31,6 +36,7 @@ object BazelBspTypeScriptProjectTest : BazelBspTestBaseScenario() {
       listOf(
         helloTestBuildTarget(),
         exampleLibTestBuildTarget(),
+        appWebTestBuildTarget(),
       ),
     )
 
@@ -72,6 +78,25 @@ object BazelBspTypeScriptProjectTest : BazelBspTestBaseScenario() {
     return buildTarget
   }
 
+  private fun appWebTestBuildTarget(): BuildTarget {
+    val buildTarget =
+      BuildTarget(
+        BuildTargetIdentifier("$targetPrefix//webtest:app_test"),
+        listOf("test"),
+        listOf("typescript"),
+        emptyList(),
+        BuildTargetCapabilities().also {
+          it.canCompile = true
+          it.canTest = true
+          it.canRun = false
+          it.canDebug = false
+        },
+      )
+    buildTarget.displayName = "$targetPrefix//webtest:app_test"
+    buildTarget.baseDirectory = "file://\$WORKSPACE/webtest/"
+    return buildTarget
+  }
+
   private fun workspaceBuildTargets(): BazelBspTestScenarioStep {
     val workspaceBuildTargetsResult = expectedWorkspaceBuildTargetsResult()
 
@@ -83,8 +108,35 @@ object BazelBspTypeScriptProjectTest : BazelBspTestBaseScenario() {
     }
   }
 
+  private fun webTestSources(): BazelBspTestScenarioStep {
+    val appTsSource =
+      SourceItem(
+        "file://\$WORKSPACE/webtest/app.ts",
+        SourceItemKind.FILE,
+        false,
+      )
+    val appTestSources =
+      SourcesItem(
+        BuildTargetIdentifier("$targetPrefix//webtest:app_test"),
+        listOf(appTsSource),
+      )
+    appTestSources.roots = emptyList()
+
+    val sourcesParams = SourcesParams(listOf(BuildTargetIdentifier("$targetPrefix//webtest:app_test")))
+    val expectedSourcesResult = SourcesResult(listOf(appTestSources))
+
+    return BazelBspTestScenarioStep("web_test sources") {
+      testClient.testSources(
+        1.minutes,
+        sourcesParams,
+        expectedSourcesResult,
+      )
+    }
+  }
+
   override fun scenarioSteps(): List<BazelBspTestScenarioStep> =
     listOf(
       workspaceBuildTargets(),
+      webTestSources(),
     )
 }

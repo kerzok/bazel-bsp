@@ -13,7 +13,7 @@ fun String.readXML(log: Logger? = null): Document? =
     DocumentBuilderFactory
       .newInstance()
       .newDocumentBuilder()
-      .parse(InputSource(StringReader(this)))
+      .parse(InputSource(StringReader(this.trimStart())))
   } catch (e: Exception) {
     log?.error("Failed to parse string to xml", e)
     null

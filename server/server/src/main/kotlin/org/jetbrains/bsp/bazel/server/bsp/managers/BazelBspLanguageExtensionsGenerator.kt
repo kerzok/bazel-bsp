@@ -38,7 +38,7 @@ enum class Language(
   Go("//aspects:rules/go/go_info.bzl", listOf("rules_go", "io_bazel_rules_go"), listOf("extract_go_info"), true, false),
   TypeScript(
     "//aspects:rules/typescript/typescript_info.bzl",
-    listOf("aspect_rules_jest", "aspect_rules_ts", "rules_ts", "rules_jest"),
+    listOf("aspect_rules_jest", "aspect_rules_ts", "rules_ts", "rules_jest", "jazelle"),
     listOf("extract_typescript_info"),
     false,
     false,
