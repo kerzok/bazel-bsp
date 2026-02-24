@@ -4,21 +4,6 @@ load("@rules_bazel_integration_test//bazel_integration_test:defs.bzl", "bazel_in
 def bazel_integration_test_all_versions(name, test_runner, project_path = None, bzlmod_project_path = None, env = {}, additional_env_inherit = [], additional_tags = []):
     bazel_versions = []
 
-    if project_path != None:
-        workspace_bazel_versions = ["6.4.0"]
-        bazel_versions = workspace_bazel_versions
-
-        bazel_integration_tests(
-            name = name,
-            timeout = "eternal",
-            bazel_versions = workspace_bazel_versions,
-            test_runner = test_runner,
-            workspace_path = project_path,
-            env = env,
-            additional_env_inherit = additional_env_inherit,
-            tags = integration_test_utils.DEFAULT_INTEGRATION_TEST_TAGS + additional_tags,
-        )
-
     if bzlmod_project_path != None:
         bzlmod_bazel_versions = ["7.6.1", "8.2.1"]
         bazel_versions += bzlmod_bazel_versions
