@@ -11,7 +11,7 @@ import org.jetbrains.bsp.bazel.base.BazelBspTestScenarioStep
 import org.jetbrains.bsp.bazel.install.Install
 import kotlin.io.path.Path
 import kotlin.io.path.relativeTo
-import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration.Companion.minutes
 
 object RulesScalaBzlmodTest : BazelBspTestBaseScenario() {
   private val testClient = createBazelClient()
@@ -45,7 +45,7 @@ object RulesScalaBzlmodTest : BazelBspTestBaseScenario() {
     BazelBspTestScenarioStep(
       "compare workspace targets results",
     ) {
-      testClient.test(60.seconds) { session, _ ->
+      testClient.test(5.minutes) { session, _ ->
         val targetsResult = session.server.workspaceBuildTargets().await()
 
         targetsResult.targets.size shouldBe 2

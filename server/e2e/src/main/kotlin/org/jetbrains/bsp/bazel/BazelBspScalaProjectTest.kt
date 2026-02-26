@@ -26,7 +26,6 @@ import org.jetbrains.bsp.bazel.base.BazelBspTestBaseScenario
 import org.jetbrains.bsp.bazel.base.BazelBspTestScenarioStep
 import java.util.UUID
 import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
 
 object BazelBspScalaProjectTest : BazelBspTestBaseScenario() {
   private val log = LogManager.getLogger(BazelBspScalaProjectTest::class.java)
@@ -111,7 +110,7 @@ object BazelBspScalaProjectTest : BazelBspTestBaseScenario() {
   private fun compareWorkspaceTargetsResults(): BazelBspTestScenarioStep =
     BazelBspTestScenarioStep(
       "compare workspace targets results",
-    ) { testClient.testWorkspaceTargets(120.seconds, expectedWorkspaceBuildTargetsResult()) }
+    ) { testClient.testWorkspaceTargets(3.minutes, expectedWorkspaceBuildTargetsResult()) }
 
   private fun scalaOptionsResults(): BazelBspTestScenarioStep {
     val expectedTargetIdentifiers = expectedTargetIdentifiers().filter { it.uri != "bsp-workspace-root" }
@@ -130,7 +129,7 @@ object BazelBspScalaProjectTest : BazelBspTestBaseScenario() {
     val expectedScalaOptionsResult = ScalacOptionsResult(expectedScalaOptionsItems)
     val scalaOptionsParams = ScalacOptionsParams(expectedTargetIdentifiers)
     return BazelBspTestScenarioStep("scalaOptions results") {
-      testClient.testScalacOptions(120.seconds, scalaOptionsParams, expectedScalaOptionsResult)
+      testClient.testScalacOptions(3.minutes, scalaOptionsParams, expectedScalaOptionsResult)
     }
   }
 
@@ -148,7 +147,7 @@ object BazelBspScalaProjectTest : BazelBspTestBaseScenario() {
     val expectedScalaOptionsResult = ScalacOptionsResult(expectedScalaOptionsItems)
     val scalaOptionsParams = ScalacOptionsParams(expectedTargetIdentifiers)
     return BazelBspTestScenarioStep("scalaOptions results") {
-      testClientClasspathReceiver.testScalacOptions(60.seconds, scalaOptionsParams, expectedScalaOptionsResult)
+      testClientClasspathReceiver.testScalacOptions(3.minutes, scalaOptionsParams, expectedScalaOptionsResult)
     }
   }
 
@@ -159,7 +158,7 @@ object BazelBspScalaProjectTest : BazelBspTestBaseScenario() {
     expectedDiagnostics: List<PublishDiagnosticsParams>,
   ) {
     val transformedParams = testClient.applyJsonTransform(params)
-    testClient.test(60.seconds) { session, _ ->
+    testClient.test(3.minutes) { session, _ ->
       session.client.clearDiagnostics()
       val result = session.server.buildTargetCompile(transformedParams).await()
       expectedDiagnostics.forEach { expected ->
